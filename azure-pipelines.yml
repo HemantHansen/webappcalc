@@ -1,0 +1,19 @@
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '20.0' # Specify the Node.js version you want to use
+
+- script: |
+    npm install
+    npm run build
+  displayName: 'Install Dependencies and Build'
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'EnoroCX Cloud TEST'
+    appType: 'webAppLinux'
+    appName: 'TestAppCalc'
+    package: '$(System.DefaultWorkingDirectory)' # Point to the build output directory

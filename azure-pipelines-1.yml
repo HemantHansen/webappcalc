@@ -1,5 +1,5 @@
 trigger:
-- main
+- main # Ensure this is the correct branch name for your repository
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -9,18 +9,21 @@ steps:
   displayName: 'Checkout Repository'
 
 - script: |
-    echo "Listing current directory structure:"
-    ls -la
-    pwd
+    echo "Listing current directory structure and printing working directory:" && ls -la && pwd
   displayName: 'List Files and Current Directory'
 
 - task: NodeTool@0
   inputs:
-    versionSpec: '18.x' # Use a stable Node.js version
-  displayName: 'Install Node.js'
+    versionSpec: '18.12.1' # Use a stable Node.js version
 
 - script: |
     npm install
-    npm run build
-  workingDirectory: $(System.DefaultWorkingDirectory) # Update based on directory structure
-  displayName: 'Install Dependencies and Build'
+  workingDirectory: $(System.DefaultWorkingDirectory) # Update based on directory structure, e.g., 'src' or 'app'
+  displayName: 'Install Dependencies'
+
+- script: |
+    echo "Listing files in the source directory:"
+    ls -la $(Build.SourcesDirectory)
+    ls -la /home/vsts/work/1/s
+    pwd
+  displayName: 'List Source Directory Contents'

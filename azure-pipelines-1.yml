@@ -5,35 +5,23 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+- checkout: self
+  displayName: 'Checkout Repository'
+
+- script: |
+    echo "Listing current directory structure:"
+    ls -la
+    pwd
+  displayName: 'List Files in Directory'
+
 - task: NodeTool@0
   inputs:
     versionSpec: '18.x' # Use a stable Node.js version
   displayName: 'Install Node.js'
 
 - script: |
-    echo "Checking working directory..."
-    ls -la
-    pwd
-  displayName: 'Check Directory Structure'
-
-- script: |
-    echo "Cleaning npm cache and old node_modules..."
-    npm cache clean --force
-    rm -rf node_modules
     echo "Installing dependencies..."
     npm install
-  displayName: 'Install Dependencies'
-
-- script: |
-    echo "Checking for missing dependencies..."
-    npm install --force
-  displayName: 'Ensure All Dependencies Are Installed'
-
-- script: |
-    echo "Running build step..."
     npm run build
-  displayName: 'Build the Project'
-
-- script: |
-    echo "Build completed successfully"
-  displayName: 'Post Build Confirmation'
+  workingDirectory: $(System.DefaultWorkingDirectory)/src # Adjust if package.json is in a subfolder
+  displayName: 'Install Dependencies and Build'
